@@ -6,11 +6,15 @@ using System.Text.Json.Serialization;
 namespace YAMPR_LIB;
 
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
-public class SeedObject
+public class PatcherConfig
 {
     [JsonInclude]
     [JsonPropertyName("starting_items")]
     public StartingItems StartingItems = new();
+
+    [JsonInclude]
+    [JsonPropertyName("starting_location")]
+    public StartLocation StartLocation = new();
 }
 
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
@@ -35,4 +39,20 @@ public class StartingItems
     [JsonInclude]
     [JsonPropertyName("aeon")]
     public List<string> Aeon = [];
+}
+
+[JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
+public class StartLocation
+{
+    [JsonInclude]
+    [JsonPropertyName("room")]
+    public string Room = "tal_Landing_Site";
+
+    [JsonInclude]
+    [JsonPropertyName("x")]
+    public int X = 400;
+
+    [JsonInclude]
+    [JsonPropertyName("y")]
+    public int Y = 516;
 }

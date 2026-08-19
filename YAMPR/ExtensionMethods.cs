@@ -25,16 +25,25 @@ public static class ExtensionMethods
 
     public static string GetGMLCode(this UndertaleCode code)
     {
+        if (Patcher.CodeCache.TryGetValue(code, out string? cached))
+        {
+            return cached;
+        }
+
         var ctx = new DecompileContext(globalCtx!, code, decompileSettings);
-        return ctx.DecompileToString();
+        cached = ctx.DecompileToString();
+        Patcher.CodeCache[code] = cached;
+        return cached;
     }
-    
-    public static void CompileGMLCode(this UndertaleCode code, string newCode)
+
+    public static void ReplaceGMLCode(this UndertaleCode code, string vanilla, string modified, bool optional=false)
     {
-        CompileGroup group = new(gmData);
-        group.QueueCodeReplace(code, newCode);
-        group.Compile();
+        var func = code.GetGMLCode();
+        if (!func.Contains(vanilla))
+        {
+            throw new ApplicationException($"Replacement code not found in function {code.Name}.\n\nString: {vanilla}");
+        }
+
+        Patcher.CodeCache[code] = func.Replace(vanilla, modified);
     }
-
-
 }

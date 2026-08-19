@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\YAMPR\YAMPR-LIB.csproj" />
+    <ProjectReference Include="..\YAMPR\YAMPR_LIB.csproj" />
   </ItemGroup>
 
 </Project>

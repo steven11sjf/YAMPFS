@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.9.12105.275 stable
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAMPR-LIB", "YAMPR\YAMPR-LIB.csproj", "{829489E8-A889-4936-B574-0EBBEA9EFA4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAMPR_LIB", "YAMPR\YAMPR_LIB.csproj", "{829489E8-A889-4936-B574-0EBBEA9EFA4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UndertaleModLib", "UndertaleModTool\UndertaleModLib\UndertaleModLib.csproj", "{3E1FBADF-4C64-D01C-7F2D-01009E3B0CBB}"
 EndProject

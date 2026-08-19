@@ -23,13 +23,13 @@ public class StartingItems
             ds_write("Missiles Max", 15);
         """;
 
-    public static void Apply(UndertaleData gmData, GlobalDecompileContext ctx, SeedObject seedObject)
+    public static void Apply(UndertaleData gmData, PatcherConfig config)
     {
+        // add starting etanks/missiles and aeon abilities to the start game function
+
         var gameCreateCode = gmData.Code.ByName("gml_Object_obj_game_Create_0");
-        var decompiled = gameCreateCode.GetGMLCode();
         var newCode = "";
-        var items = seedObject.StartingItems;
-        Debug.WriteLine(InitialCreationCode);
+        var items = config.StartingItems;
         // TODO: add variable etank sizes
         newCode += $"    ds_write(\"Energy\", {items.EnergyTanks * 100 + 99});\n";
         newCode += "    ds_write(\"Energy Tanks\", ds_zero(\"Energy Tanks Max\"));\n";
@@ -47,13 +47,10 @@ public class StartingItems
             newCode += $"    array_push(aeon_array, \"{aeonName}\");\n";
         }
 
-        if (!decompiled.Contains(InitialCreationCode))
-        {
-            Debug.WriteLine("fuck");
-        }
+        gameCreateCode.ReplaceGMLCode(InitialCreationCode, newCode);
 
-        var final = decompiled.Replace(InitialCreationCode, newCode);
-        Debug.WriteLine(final);
-        gameCreateCode.CompileGMLCode(final);
+        // remove the requirement to have artifacts to use the aeon menu
+        var menuStepCode = gmData.Code.ByName("gml_Object_menu_save_point_Step_0");
+        menuStepCode.ReplaceGMLCode("if (skips < 12)", "if (true)");
     }
 }
