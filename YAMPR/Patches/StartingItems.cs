@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using UndertaleModLib;
-using UndertaleModLib.Decompiler;
-using YAMPR;
+﻿using UndertaleModLib;
 
 namespace YAMPR_LIB.Patches;
 
@@ -51,6 +45,6 @@ public class StartingItems
 
         // remove the requirement to have artifacts to use the aeon menu
         var menuStepCode = gmData.Code.ByName("gml_Object_menu_save_point_Step_0");
-        menuStepCode.ReplaceGMLCode("if (skips < 12)", "if (true)");
+        menuStepCode.ReplaceGMLCode("if (skips < 12)", "if (0 < array_length(dz(\"Aeon\")))");
     }
 }

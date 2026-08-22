@@ -36,21 +36,13 @@ public class Patcher
         return $"{major}.{minor}.{build}";
     }
 
-    public static string CleanRoomName(string name)
-    {
-        return name.Replace("_", " ")[4..];
-    }
-
     public static void Main(string mpoPath, string outputMpoPath, string jsonPath)
     {
-        PatcherConfig? config = JsonSerializer.Deserialize<PatcherConfig>(File.ReadAllText(jsonPath));
+        Console.WriteLine($"Starting YAMPR {CreateVersionString()}");
 
-        if (config == null)
-        {
-            throw new ApplicationException($"Json object at path {jsonPath} could not be parsed!");
-        }
-
-        Stopwatch sw = new Stopwatch();
+        PatcherConfig? config = JsonSerializer.Deserialize<PatcherConfig>(File.ReadAllText(jsonPath)) 
+            ?? throw new ApplicationException($"Json object at path {jsonPath} could not be parsed!");
+        var sw = new Stopwatch();
         sw.Start();
 
         using (FileStream fs = new FileInfo(mpoPath).OpenRead())
@@ -60,12 +52,14 @@ public class Patcher
 
         sw.Stop();
         var afterRead = sw.Elapsed;
-
         Console.WriteLine("Read data file.");
+        sw.Start();
+
         decompileContext = new GlobalDecompileContext(gmData);
 
         Patches.StartingItems.Apply(gmData, config);
         Patches.StartLocation.Apply(gmData, config);
+        Patches.RandomizerPickup.Apply(gmData, config);
 
         // compile all code units
         CompileGroup group = new(gmData);
@@ -75,12 +69,27 @@ public class Patcher
             Debug.WriteLine(replacement);
             group.QueueCodeReplace(code, replacement);
         }
-        group.Compile();
+        var res = group.Compile();
+
+        if (!res.Successful)
+        {
+            throw new ApplicationException("Error compiling GML:\n\n" + res.PrintAllErrors(true));
+        }
+
+        sw.Stop();
+        var patchingTime = sw.Elapsed;
+        Console.WriteLine("Generated patched data file.");
+        sw.Start();
 
         // write data.win
         using (FileStream fs = new FileInfo(outputMpoPath).OpenWrite())
         {
             UndertaleIO.Write(fs, gmData, Console.WriteLine);
         }
+
+        sw.Stop();
+        var writingTime = sw.Elapsed;
+        Console.WriteLine($"Wrote patched file to {outputMpoPath}.");
+        Console.WriteLine($"Data patched in {(patchingTime-afterRead).TotalSeconds} seconds ({afterRead.TotalSeconds} read, {(writingTime-patchingTime).TotalSeconds} write).");
     }
 }

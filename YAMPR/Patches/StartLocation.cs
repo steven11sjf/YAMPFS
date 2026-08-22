@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.WebSockets;
-using System.Text;
-using Underanalyzer.Decompiler;
+﻿
 using UndertaleModLib;
-using UndertaleModLib.Decompiler;
 
 namespace YAMPR_LIB.Patches;
 

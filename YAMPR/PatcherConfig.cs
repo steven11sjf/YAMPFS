@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace YAMPR_LIB;
 
@@ -15,6 +12,10 @@ public class PatcherConfig
     [JsonInclude]
     [JsonPropertyName("starting_location")]
     public StartLocation StartLocation = new();
+
+    [JsonInclude]
+    [JsonPropertyName("pickups")]
+    public PickupConfig PickupConfig = new();
 }
 
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
@@ -55,4 +56,73 @@ public class StartLocation
     [JsonInclude]
     [JsonPropertyName("y")]
     public int Y = 516;
+}
+
+[JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
+public class PickupConfig
+{
+    [JsonInclude]
+    [JsonPropertyName("items")]
+    public List<PickupEntry> Items = [];
+
+    [JsonInclude]
+    [JsonPropertyName("require_main_missiles")]
+    public bool RequireMainMissiles = false;
+
+    [JsonInclude]
+    [JsonPropertyName("require_pb_detonator")]
+    public bool RequirePBDetonator = false;
+
+    [JsonInclude]
+    [JsonPropertyName("require_power_beam")]
+    public bool RequirePowerBeam = false;
+}
+
+[JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
+public class PickupEntry
+{
+    [JsonInclude]
+    [JsonPropertyName("room")]
+    public required string Room;
+
+    [JsonInclude]
+    [JsonPropertyName("instance_id")]
+    public required uint InstanceID;
+
+    [JsonInclude]
+    [JsonPropertyName("game_object_name")]
+    public required string GameObjectName;
+
+    [JsonInclude]
+    [JsonPropertyName("item_key")]
+    public required string ItemKey;
+
+    [JsonInclude]
+    [JsonPropertyName("item_val")]
+    public int ItemValue = 1;
+
+    [JsonInclude]
+    [JsonPropertyName("item_name")]
+    public required string ItemName;
+
+    [JsonInclude]
+    [JsonPropertyName("item_desc")]
+    public required string ItemDescription;
+
+    [JsonInclude]
+    [JsonPropertyName("aeons")]
+    public List<string> Aeons = [];
+
+    [JsonInclude]
+    [JsonPropertyName("sprite")]
+    public required string Sprite;
+
+    [JsonInclude]
+    [JsonPropertyName("fanfare")]
+    public string Fanfare = "bgmFanfareItem";
+
+    public bool IsExpansion()
+    {
+        return (ItemKey == "Missiles Max" || ItemKey == "Power Bombs Max");
+    }
 }

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Underanalyzer;
-using Underanalyzer.Compiler;
-using Underanalyzer.Decompiler;
+﻿using Underanalyzer.Decompiler;
 using UndertaleModLib;
-using UndertaleModLib.Compiler;
 using UndertaleModLib.Decompiler;
 using UndertaleModLib.Models;
 
@@ -45,5 +39,10 @@ public static class ExtensionMethods
         }
 
         Patcher.CodeCache[code] = func.Replace(vanilla, modified);
+    }
+
+    public static void SubstituteGMLCode(this UndertaleCode code, string modified)
+    {
+        Patcher.CodeCache[code] = modified;
     }
 }
