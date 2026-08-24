@@ -47,9 +47,6 @@ jobs:
       - name: Install Python packages
         run: python -m pip install --upgrade pip build cibuildwheel
 
-      - name: Build YAMS-Lib into proper directory
-        run: dotnet publish YAMPFS-LIB -c Release -o mpo_yampfs/yampfs -r ${{matrix.os.name}}
-
       - name: build wheels
         # Ideally, we'd have PYTHONWARNINGS=error here, but
         # https://github.com/pypa/pip/issues/12243 is causing issues.
