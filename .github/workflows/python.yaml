@@ -48,6 +48,11 @@ jobs:
         run: python -m pip install --upgrade pip build cibuildwheel
 
       - name: build wheels
+        env:
+          CIBW_BEFORE_ALL_LINUX: >
+            curl -sSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh &&
+            bash dotnet-install.sh --channel 10.0 --install-dir /usr/local/dotnet &&
+            ln -sf /usr/local/dotnet/dotnet /usr/local/bin/dotnet
         # Ideally, we'd have PYTHONWARNINGS=error here, but
         # https://github.com/pypa/pip/issues/12243 is causing issues.
         run: python -m cibuildwheel --output-dir wheelhouse
