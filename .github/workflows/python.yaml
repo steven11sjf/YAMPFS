@@ -58,7 +58,9 @@ jobs:
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_34
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
             pip install wheel &&
-            python -m wheel tags --platform-tag manylinux_2_34_x86_64 --remove --dest-dir {dest_dir} {wheel}
+            python -m wheel tags --platform-tag manylinux_2_34_x86_64 --remove {wheel} &&
+            mkdir -p {dest_dir} &&
+            mv $(dirname {wheel})/*.whl {dest_dir}/ 
           CIBW_BUILD: cp312-* cp313-* cp314-*
         # Ideally, we'd have PYTHONWARNINGS=error here, but
         # https://github.com/pypa/pip/issues/12243 is causing issues.
