@@ -10,6 +10,7 @@ namespace YAMPFS_LIB;
 
 public class Patcher
 {
+    public static string Version = CreateVersionString();
     internal static UndertaleData? gmData;
     internal static GlobalDecompileContext? decompileContext;
 

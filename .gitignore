@@ -362,7 +362,9 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-UndertaleModTool/**
-dist/**
-mpo_yampfs/yampfs/**
+UndertaleModTool/
+dist/
+mpo_yampfs/yampfs/
 mpo_yampfs.egg-info/
+wheelhouse/
+build/
