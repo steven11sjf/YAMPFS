@@ -55,6 +55,7 @@ jobs:
             ln -sf /usr/local/dotnet/dotnet /usr/local/bin/dotnet
           CIBW_ENVIRONMENT_LINUX: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
           MACOSX_DEPLOYMENT_TARGET: 14.0
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_34
         # Ideally, we'd have PYTHONWARNINGS=error here, but
         # https://github.com/pypa/pip/issues/12243 is causing issues.
         run: python -m cibuildwheel --output-dir wheelhouse
