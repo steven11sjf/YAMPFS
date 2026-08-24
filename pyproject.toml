@@ -3,7 +3,7 @@ requires = ["setuptools>=62.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mpo-yamprs"
+name = "mpo_yampfs"
 version = "0.1.0"
 authors = [
     {name = "hyperbola0"},
@@ -32,24 +32,24 @@ test = [
 
 
 [project.urls]
-Repository = "https://github.com/steven11sjf/yamprs"
+Repository = "https://github.com/steven11sjf/yampfs"
 
 
 # Entry Points for PyInstaller
 [project.entry-points.pyinstaller40]
-hook-dirs = "mpo-yamprs.__pyinstaller:get_hook_dirs"
+hook-dirs = "mpo_yampfs.__pyinstaller:get_hook_dirs"
 
 
 [tool.setuptools]
-packages = ["mpo-yamprs", "mpo-yamprs.__pyinstaller"]
+packages = ["mpo_yampfs", "mpo_yampfs.__pyinstaller"]
 
 [tool.setuptools.package-data]
-"*" = ["yamprs/**"]
-"yamprs_py.yamprs" = ["**"]
+"*" = ["yampfs/**"]
+"yampfs_py.yampfs" = ["**"]
 
 
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
-    "mpo_yamprs_tests",
+    "mpo_yampfs_tests",
 ]

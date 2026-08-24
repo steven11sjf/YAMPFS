@@ -365,3 +365,4 @@ FodyWeavers.xsd
 UndertaleModTool/**
 dist/**
 mpo_yampfs/yampfs/**
+mpo_yampfs.egg-info/
