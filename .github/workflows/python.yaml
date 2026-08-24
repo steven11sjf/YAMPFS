@@ -37,7 +37,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v6
@@ -134,11 +134,25 @@ jobs:
       id-token: write
       
     steps:
-      - name: Download all the dists
+      - name: Download Linux dists
         uses: actions/download-artifact@v8
         with:
-          name: python-package-distributions-*
-          path: wheelhouse/*
+          name: cibw-wheels-Linux
+          path: dist
+
+      - name: Download Windows dists
+        uses: actions/download-artifact@v8
+        with:
+          name: cibw-wheels-Windows
+          path: dist
+      - name: Download macOS dists
+        uses: actions/download-artifact@v8
+        with:
+          name: cibw-wheels-macOS
+          path: dist
+      
+      - name: Publish 📦 to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
       
       - name: Publish 📦 to PyPI
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
