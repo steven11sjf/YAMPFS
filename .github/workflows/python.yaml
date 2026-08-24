@@ -53,6 +53,7 @@ jobs:
             curl -sSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh &&
             bash dotnet-install.sh --channel 10.0 --install-dir /usr/local/dotnet &&
             ln -sf /usr/local/dotnet/dotnet /usr/local/bin/dotnet
+          MACOSX_DEPLOYMENT_TARGET: 14.0
         # Ideally, we'd have PYTHONWARNINGS=error here, but
         # https://github.com/pypa/pip/issues/12243 is causing issues.
         run: python -m cibuildwheel --output-dir wheelhouse
