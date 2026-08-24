@@ -111,8 +111,13 @@ jobs:
         run: python -m pip install --upgrade pip
 
       - name: install built wheel
-        run: python -m pip install "$(ls dist/*.whl)[test]"
+        run: |
+          python_tag="cp${PYVER//./}"
+          wheel_file=$(ls dist/*"${python_tag}"*.whl)
+          python -m pip install "${wheel_file}[test]"
         shell: bash
+        env:
+          PYVER: ${{ matrix.python.version }}
 
       - name: run pytest
         run: python -m pytest --cov
