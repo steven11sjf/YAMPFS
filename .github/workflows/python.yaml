@@ -1,0 +1,163 @@
+name: Python Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - main
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - { name: "Linux", image: ubuntu-latest, event_name: "${{ github.event_name }}" }
+          - { name: "macOS", image: macos-latest, event_name: "${{ github.event_name }}" }
+          - { name: "Windows", image: windows-latest, event_name: "${{ github.event_name }}" }
+
+        exclude:
+          - os: { name: "Linux", image: ubuntu-latest, event_name: merge_group }
+          - os: { name: "macOS", image: macos-latest, event_name: merge_group }
+    runs-on: ${{ matrix.os.image }}
+
+    name: Build YAMPFS-Lib and Python Wheel (${{ matrix.os.image }})
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          submodules: 'recursive'
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install Python packages
+        run: python -m pip install --upgrade pip build cibuildwheel
+
+      - name: build wheels
+        env:
+          CIBW_BEFORE_ALL_LINUX: >
+            curl -sSL https://dot.net/v1/dotnet-install.sh -o dotnet-install.sh &&
+            bash dotnet-install.sh --channel 10.0 --install-dir /usr/local/dotnet &&
+            ln -sf /usr/local/dotnet/dotnet /usr/local/bin/dotnet
+          CIBW_ENVIRONMENT_LINUX: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+          MACOSX_DEPLOYMENT_TARGET: 14.0
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_34
+          CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
+            pip install wheel &&
+            python -m wheel tags --platform-tag manylinux_2_34_x86_64 --remove {wheel} &&
+            mkdir -p {dest_dir} &&
+            mv $(dirname {wheel})/*.whl {dest_dir}/ 
+          CIBW_BUILD: cp312-* cp313-* cp314-*
+        # Ideally, we'd have PYTHONWARNINGS=error here, but
+        # https://github.com/pypa/pip/issues/12243 is causing issues.
+        run: python -m cibuildwheel --output-dir wheelhouse
+
+      - name: Store the packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: cibw-wheels-${{ matrix.os.name }}
+          path: ./wheelhouse/*.whl
+
+  test:
+    needs:
+      - build
+
+    runs-on: ubuntu-latest
+    name: Test Python ${{ matrix.python.version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python:
+          - {version: '3.12'}
+          - {version: '3.13'}
+          - {version: '3.14'}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: remove code outside of wheel
+        run: rm -rf mpo_yampfs
+        shell: bash
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python.version }}
+
+      - name: Download all the dists
+        uses: actions/download-artifact@v8
+        with:
+          name: cibw-wheels-Linux
+          path: dist
+
+      - name: Install Python packages
+        run: python -m pip install --upgrade pip
+
+      - name: install built wheel
+        run: |
+          python_tag="cp${PYVER//./}"
+          wheel_file=$(ls dist/*"${python_tag}"*.whl)
+          python -m pip install "${wheel_file}[test]"
+        shell: bash
+        env:
+          PYVER: ${{ matrix.python.version }}
+
+      - name: run pytest
+        run: python -m pytest --cov
+
+      - name: codecov
+        uses: codecov/codecov-action@v7
+
+  pypi:
+    runs-on: 'ubuntu-latest'
+    needs:
+      - test
+
+    permissions:
+      id-token: write
+      
+    steps:
+      - name: Download Linux dists
+        uses: actions/download-artifact@v8
+        with:
+          name: cibw-wheels-Linux
+          path: dist
+
+      - name: Download Windows dists
+        uses: actions/download-artifact@v8
+        with:
+          name: cibw-wheels-Windows
+          path: dist
+      - name: Download macOS dists
+        uses: actions/download-artifact@v8
+        with:
+          name: cibw-wheels-macOS
+          path: dist
+      
+      - name: Publish 📦 to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+      
+      - name: Publish 📦 to PyPI
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://pypi.org/legacy/

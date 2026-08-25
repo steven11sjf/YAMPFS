@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace YAMPR_LIB;
+namespace YAMPFS_LIB;
 
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
 public class PatcherConfig

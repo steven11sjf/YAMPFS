@@ -6,10 +6,11 @@ using UndertaleModLib.Compiler;
 using UndertaleModLib.Decompiler;
 using UndertaleModLib.Models;
 
-namespace YAMPR_LIB;
+namespace YAMPFS_LIB;
 
 public class Patcher
 {
+    public static string Version = CreateVersionString();
     internal static UndertaleData? gmData;
     internal static GlobalDecompileContext? decompileContext;
 
@@ -38,7 +39,7 @@ public class Patcher
 
     public static void Main(string mpoPath, string outputMpoPath, string jsonPath)
     {
-        Console.WriteLine($"Starting YAMPR {CreateVersionString()}");
+        Console.WriteLine($"Starting YAMPFS {CreateVersionString()}");
 
         PatcherConfig? config = JsonSerializer.Deserialize<PatcherConfig>(File.ReadAllText(jsonPath)) 
             ?? throw new ApplicationException($"Json object at path {jsonPath} could not be parsed!");

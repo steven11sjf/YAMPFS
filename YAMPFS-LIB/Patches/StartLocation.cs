@@ -1,7 +1,7 @@
 ﻿
 using UndertaleModLib;
 
-namespace YAMPR_LIB.Patches;
+namespace YAMPFS_LIB.Patches;
 
 public class StartLocation
 {

@@ -3,7 +3,7 @@ using UndertaleModLib;
 using UndertaleModLib.Decompiler;
 using UndertaleModLib.Models;
 
-namespace YAMPR_LIB;
+namespace YAMPFS_LIB;
 
 public static class ExtensionMethods
 {
