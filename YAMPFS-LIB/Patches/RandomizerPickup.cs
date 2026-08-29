@@ -1,12 +1,44 @@
 ﻿using UndertaleModLib;
 using UndertaleModLib.Models;
+using YAMPFS_LIB.Data;
 
 namespace YAMPFS_LIB.Patches;
 
 public class RandomizerPickup
 {
+
+    public static void ConvertPickupsToGameObjects(UndertaleData gmData)
+    {
+        var locations = AllItemLocations.GetItemLocationData();
+
+        foreach (var loc in locations)
+        {
+            var go = new UndertaleGameObject()
+            {
+                Name = gmData.Strings.MakeString($"obj_rando_pickup_{loc.PickupIndex}"),
+                ParentId = gmData.GameObjects.ByName(loc.OriginalObjectName)
+            };
+
+            gmData.GameObjects.Add(go);
+
+            if (loc.InstanceID != -1)
+            {
+                var instance = gmData.Rooms.ByName(loc.Room).GameObjects.ByInstanceID((uint)loc.InstanceID);
+                instance.ObjectDefinition = go;
+            }
+
+            foreach (var scriptName in loc.SpawningScriptNames)
+            {
+                var script = gmData.Code.ByName(scriptName);
+                script.ReplaceGMLCode(loc.OriginalObjectName, $"obj_rando_pickup_{loc.PickupIndex}");
+            }
+        }
+    }
+
     public static void Apply(UndertaleData gmData, PatcherConfig config)
     {
+        ConvertPickupsToGameObjects(gmData);
+
         // patch out text and fanfare change for first missile expansion
         // TODO: make game respect Missile Launcher item
         if (config.PickupConfig.RequireMainMissiles)
@@ -50,20 +82,21 @@ public class RandomizerPickup
 
             """);
 
+        var par_upgrade = gmData.GameObjects.ByName("par_upgrade");
 
         // patch each item
         foreach (var pe in config.PickupConfig.Items)
         {
-            var newObj = gmData.GameObjects.ByName(pe.GameObjectName);
-            var inst = gmData.Rooms.ByName(pe.Room).GameObjects.ByInstanceID(pe.InstanceID) 
-                ?? throw new ApplicationException($"Did not find item in room {pe.Room} with InstanceID {pe.InstanceID}");
-            inst.ObjectDefinition = newObj;
+            var randoPickupGO = gmData.GameObjects.ByName($"obj_rando_pickup_{pe.PickupIndex}");
+
+            randoPickupGO.ParentId = par_upgrade;
 
             // write new PreCreate code
+            var codePreCreate = randoPickupGO.EventHandlerFor(EventType.PreCreate, gmData);
             var script = $"""
                 event_inherited();
                 self.ds_name = "{pe.ItemKey}";
-                self.upgrade_name = "{pe.ItemName}";
+                self.upgrade_name = "{pe.ItemDisplayName}";
                 self.description = "{pe.ItemDescription}";
                 self.ds_adding = {pe.IsExpansion().ToString().ToLower()};
                 self.ds_value = {pe.ItemValue};
@@ -81,9 +114,35 @@ public class RandomizerPickup
 
             script += "self.sends_message = true;\n";
 
-            // initialize PreCreateCode and replace GML
-            inst.PreCreateCode ??= UndertaleCode.CreateEmptyEntry(gmData, $"gml_roomCC_Instance_{inst.InstanceID}_PreCreate");
-            inst.PreCreateCode.SubstituteGMLCode(script);
+            codePreCreate.SubstituteGMLCode(script);
+
+            // assign sprite
+            var spriteName = pe.Sprite;
+            randoPickupGO.Sprite = gmData.Sprites.ByName(spriteName);
+
+            // TODO decouple artifact index from sprite
+            if (spriteName == "sprChozoArtifacts")
+            {
+                var codeCreate = randoPickupGO.EventHandlerFor(EventType.Create, gmData);
+                codeCreate.SubstituteGMLCode($"""
+                    event_inherited();
+                    image_speed = 0;
+                    image_index = {pe.ArtifactIndex};
+                    alarm[0] = 6;
+
+                    """);
+
+                var codeDestroy = randoPickupGO.EventHandlerFor(EventType.Destroy, gmData);
+                codeDestroy.SubstituteGMLCode($"""
+                    event_inherited();
+                    temp_array = dz("Chozo Artifacts");
+                    art = {pe.ArtifactIndex};
+                    array_set(temp_array, art, artifact_names_short(art));
+                    ds_write("Chozo Artifacts", temp_array);
+
+                    """);
+            }
+
         }
     }
 }

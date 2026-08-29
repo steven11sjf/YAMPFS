@@ -82,12 +82,8 @@ public class PickupConfig
 public class PickupEntry
 {
     [JsonInclude]
-    [JsonPropertyName("room")]
-    public required string Room;
-
-    [JsonInclude]
-    [JsonPropertyName("instance_id")]
-    public required uint InstanceID;
+    [JsonPropertyName("pickup_index")]
+    public required int PickupIndex;
 
     [JsonInclude]
     [JsonPropertyName("game_object_name")]
@@ -102,11 +98,11 @@ public class PickupEntry
     public int ItemValue = 1;
 
     [JsonInclude]
-    [JsonPropertyName("item_name")]
-    public required string ItemName;
+    [JsonPropertyName("item_display_name")]
+    public required string ItemDisplayName;
 
     [JsonInclude]
-    [JsonPropertyName("item_desc")]
+    [JsonPropertyName("item_description")]
     public required string ItemDescription;
 
     [JsonInclude]
@@ -120,6 +116,10 @@ public class PickupEntry
     [JsonInclude]
     [JsonPropertyName("fanfare")]
     public string Fanfare = "bgmFanfareItem";
+
+    [JsonInclude]
+    [JsonPropertyName("artifact_idx")]
+    public int ArtifactIndex = -1;
 
     public bool IsExpansion()
     {
