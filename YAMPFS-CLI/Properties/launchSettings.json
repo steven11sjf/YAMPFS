@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "YAMPR-CLI": {
-      "commandName": "Project",
-      "commandLineArgs": "a:\\mpo_104\\data.win a:\\mpo_modded\\data.win a:\\mp_origins\\testseed.json"
-    }
-  }
-}
