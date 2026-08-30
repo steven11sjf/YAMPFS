@@ -368,3 +368,4 @@ mpo_yampfs/yampfs/
 mpo_yampfs.egg-info/
 wheelhouse/
 build/
+YAMPFS-CLI/Properties/launchSettings.json
