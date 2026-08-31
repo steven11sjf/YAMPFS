@@ -21,9 +21,22 @@ public class RandomizerPickup
 
             gmData.GameObjects.Add(go);
 
-            if (loc.InstanceID != -1)
+            foreach (var itemInstance in loc.Instances)
             {
-                var instance = gmData.Rooms.ByName(loc.Room).GameObjects.ByInstanceID((uint)loc.InstanceID);
+                var instance = gmData.Rooms.ByName(itemInstance.Room).GameObjects.ByInstanceID(itemInstance.InstanceID);
+
+                if (instance.ObjectDefinition.Name.Content != loc.OriginalObjectName)
+                {
+                    var similar = gmData.Rooms.ByName(itemInstance.Room).GameObjects.Where(x => x.ObjectDefinition.Name.Content == loc.OriginalObjectName);
+                    Console.WriteLine($"Did not find {loc.PickupIndex} in {itemInstance.Room}. Found {similar.Count()} similar options:");
+                    foreach (var itemSimilar in similar)
+                    {
+                        Console.WriteLine($"\t{itemSimilar.InstanceID} (x={itemSimilar.X},y={itemSimilar.Y})");
+                    }
+                    Console.WriteLine("");
+                    
+                    throw new ApplicationException($"{loc.PickupIndex} Instance {instance.InstanceID} is not type {loc.OriginalObjectName}");
+                }
                 instance.ObjectDefinition = go;
             }
 

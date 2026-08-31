@@ -6,15 +6,20 @@ using System.Text.Json.Serialization;
 
 namespace YAMPFS_LIB.Data;
 
+public class ItemInstance
+{
+    [JsonInclude]
+    public required string Room;
+    [JsonInclude]
+    public uint InstanceID;
+}
 
 public class ItemLocation
 {
     [JsonInclude]
     public required int PickupIndex;
     [JsonInclude]
-    public required string Room;
-    [JsonInclude]
-    public int InstanceID = -1;
+    public List<ItemInstance> Instances = [];
     [JsonInclude]
     public List<string> SpawningScriptNames = [];
     [JsonInclude]
