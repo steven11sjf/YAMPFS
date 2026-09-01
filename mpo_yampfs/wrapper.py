@@ -67,60 +67,38 @@ class Wrapper:
         patch_data: dict,
         progress_update: Callable[[str, float], None],
     ):
-        # Copy to input dir to temp dir first to do operations there
-        progress_update("Copying to temporary path...", 0)
-        tempdir = tempfile.TemporaryDirectory()
-        shutil.copytree(input_path, tempdir.name, dirs_exist_ok=True)
+        with tempfile.TemporaryDirectory(delete=False) as tempdir:# Copy to input dir to temp dir first to do operations there
+            progress_update("Copying to temporary path...", 0)
+            shutil.copytree(input_path, tempdir.name, dirs_exist_ok=True)
 
-        # Get data.win path. Both of these *need* to be strings, as otherwise patcher won't accept them.
-        output_data_win: str = os.fspath(
-            _prepare_environment_and_get_data_win_path(tempdir.name)
-        )
-        input_data_win: str = shutil.move(output_data_win, output_data_win + "_orig")
-        input_data_win_path = Path(input_data_win)
+            # Get data.win path. Both of these *need* to be strings, as otherwise patcher won't accept them.
+            output_data_win: str = os.fspath(
+                _prepare_environment_and_get_data_win_path(tempdir.name)
+            )
+            input_data_win: str = shutil.move(output_data_win, output_data_win + "_orig")
+            input_data_win_path = Path(input_data_win)
 
-        # Temp write patch_data into json file for yampfs later
-        progress_update("Creating json file...", 0.3)
-        json_file: str = os.fspath(
-            input_data_win_path.parent.joinpath("yampfs-data.json")
-        )
-        with open(json_file, "w+") as f:
-            f.write(json.dumps(patch_data, indent=2))
+            # Temp write patch_data into json file for yampfs later
+            progress_update("Creating json file...", 0.3)
+            json_file: str = os.fspath(
+                input_data_win_path.parent.joinpath("yampfs-data.json")
+            )
+            with open(json_file, "w+") as f:
+                f.write(json.dumps(patch_data, indent=2))
 
-        # Wrapper to play rando easier on flatpak
-        # tempdir_Path = Path(tempdir.name)
-        # if platform.system() == "Linux" and not tempdir_Path.joinpath("AM2R.AppImage").exists():
-        #     wrapper_file: str = os.fspath(tempdir_Path.joinpath("start-rando.sh"))
-        #     with open(wrapper_file, "w+") as f:
-        #         f.write("#!/usr/bin/env bash\n")
-        #         f.write('script_dir="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"\n')
-        #         f.write('flatpak run --command="${script_dir}/runner" io.github.am2r_community_developers.AM2RLauncher\n')
-        #     os.chmod(wrapper_file, 0o775)
+            # Patch data.win
+            progress_update("Patching data file...", 0.6)
+            self.csharp_patcher.Main(input_data_win, output_data_win, json_file)
 
-        # AM2RLauncher installations usually have a profile.xml file. For less confusion, remove it if it exists
-        # profile_xml_path = Path(tempdir.name).joinpath("profile.xml")
-        # if profile_xml_path.exists():
-        #     profile_xml_path.unlink()
+            # Move temp dir to output dir and get rid of it. Also delete original data.win
+            # Also delete the json if we're on a race seed.
+            progress_update("Moving to output directory...", 0.8)
+            shutil.copytree(tempdir.name, output_path, dirs_exist_ok=True)
+            if not patch_data.get("configuration_identifier", {}).get("contains_spoiler", False):
+                input_data_win_path.parent.joinpath("yampfs-data.json").unlink()
+            input_data_win_path.unlink()
 
-        # Remove music files if they exist in the output path, but not in the input path, to avoid music rando side effects
-        # for f in ["mustester.ogg", "musitemamb2.ogg"]:
-        #     if output_path.joinpath(f).is_file() and not tempdir_Path.joinpath(f).is_file():
-        #         output_path.joinpath(f).unlink()
-
-        # Patch data.win
-        progress_update("Patching data file...", 0.6)
-        self.csharp_patcher.Main(input_data_win, output_data_win, json_file)
-
-        # Move temp dir to output dir and get rid of it. Also delete original data.win
-        # Also delete the json if we're on a race seed.
-        progress_update("Moving to output directory...", 0.8)
-        shutil.copytree(tempdir.name, output_path, dirs_exist_ok=True)
-        if not patch_data.get("configuration_identifier", {}).get("contains_spoiler", False):
-            input_data_win_path.parent.joinpath("yampfs-data.json").unlink()
-        # input_data_win_path.unlink()
-        shutil.rmtree(tempdir.name)
-
-        progress_update("Exporting finished!", 1)
+            progress_update("Exporting finished!", 1)
 
 
 def _load_cs_environment():
