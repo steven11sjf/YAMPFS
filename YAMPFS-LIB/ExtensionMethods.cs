@@ -32,17 +32,20 @@ public static class ExtensionMethods
 
     public static void ReplaceGMLCode(this UndertaleCode code, string vanilla, string modified, bool optional=false)
     {
+        var v = vanilla.ReplaceLineEndings("\n");
+        var m = modified.ReplaceLineEndings("\n");
+
         var func = code.GetGMLCode();
-        if (!func.Contains(vanilla))
+        if (!func.Contains(v))
         {
-            throw new ApplicationException($"Replacement code not found in function {code.Name}.\n\nString: {vanilla}");
+            throw new ApplicationException($"Replacement code not found in function {code.Name}.\n\nString: {v}");
         }
 
-        Patcher.CodeCache[code] = func.Replace(vanilla, modified);
+        Patcher.CodeCache[code] = func.Replace(v, m);
     }
 
     public static void SubstituteGMLCode(this UndertaleCode code, string modified)
     {
-        Patcher.CodeCache[code] = modified;
+        Patcher.CodeCache[code] = modified.ReplaceLineEndings("\n");
     }
 }
