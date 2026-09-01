@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <Version>0.1.7</Version>
+	  <Version>0.1.8</Version>
     <OutputType>Library</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -12,17 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\Locations.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\UndertaleModTool\UndertaleModLib\UndertaleModLib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\Locations.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>
