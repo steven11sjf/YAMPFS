@@ -69,11 +69,11 @@ class Wrapper:
     ):
         with tempfile.TemporaryDirectory(delete=False) as tempdir:# Copy to input dir to temp dir first to do operations there
             progress_update("Copying to temporary path...", 0)
-            shutil.copytree(input_path, tempdir.name, dirs_exist_ok=True)
+            shutil.copytree(input_path, tempdir, dirs_exist_ok=True)
 
             # Get data.win path. Both of these *need* to be strings, as otherwise patcher won't accept them.
             output_data_win: str = os.fspath(
-                _prepare_environment_and_get_data_win_path(tempdir.name)
+                _prepare_environment_and_get_data_win_path(tempdir)
             )
             input_data_win: str = shutil.move(output_data_win, output_data_win + "_orig")
             input_data_win_path = Path(input_data_win)
@@ -93,7 +93,7 @@ class Wrapper:
             # Move temp dir to output dir and get rid of it. Also delete original data.win
             # Also delete the json if we're on a race seed.
             progress_update("Moving to output directory...", 0.8)
-            shutil.copytree(tempdir.name, output_path, dirs_exist_ok=True)
+            shutil.copytree(tempdir, output_path, dirs_exist_ok=True)
             if not patch_data.get("configuration_identifier", {}).get("contains_spoiler", False):
                 input_data_win_path.parent.joinpath("yampfs-data.json").unlink()
             input_data_win_path.unlink()
