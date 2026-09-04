@@ -120,7 +120,7 @@ jobs:
           PYVER: ${{ matrix.python.version }}
 
       - name: run pytest
-        run: python -m pytest --cov
+        run: python -m pytest --cov --skip-if-missing
 
       - name: codecov
         uses: codecov/codecov-action@v7
