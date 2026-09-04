@@ -6,7 +6,7 @@ namespace YAMPFS_LIB.Patches;
 
 public class RandomizerPickup
 {
-
+    public static readonly uint OBJ_SAMUS_INSTANCE_ID = 577;
     public static void ConvertPickupsToGameObjects(UndertaleData gmData)
     {
         var locations = AllItemLocations.GetItemLocationData();
@@ -156,6 +156,14 @@ public class RandomizerPickup
                     """);
             }
 
+            if (pe.ItemKey.EndsWith(" Max"))
+            {
+                var codeCollisionSamus = randoPickupGO.EventHandlerFor(EventType.Collision, OBJ_SAMUS_INSTANCE_ID, gmData);
+                codeCollisionSamus.SubstituteGMLCode($"""
+                    event_inherited();
+                    ds_write("{pe.ItemKey[..^4]}", ds_zero("{pe.ItemKey}"));
+                    """);
+            }
         }
     }
 }
