@@ -6,6 +6,10 @@ namespace YAMPFS_LIB;
 public class PatcherConfig
 {
     [JsonInclude]
+    [JsonPropertyName("identifier")]
+    public ConfigurationIdentifier Identifier = new();
+
+    [JsonInclude]
     [JsonPropertyName("starting_items")]
     public StartingItems StartingItems = new();
 
@@ -16,6 +20,26 @@ public class PatcherConfig
     [JsonInclude]
     [JsonPropertyName("pickups")]
     public PickupConfig PickupConfig = new();
+}
+
+[JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
+public class ConfigurationIdentifier
+{
+    [JsonInclude]
+    [JsonPropertyName("hash")]
+    public string Hash = "UNKNOWN";
+
+    [JsonInclude]
+    [JsonPropertyName("word_hash")]
+    public string WordHash = "Default Word Hash";
+
+    [JsonInclude]
+    [JsonPropertyName("randovania_version")]
+    public string RDVVersion = "Unknown";
+
+    [JsonInclude]
+    [JsonPropertyName("patcher_version")]
+    public string PatcherVersion = "";
 }
 
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
@@ -86,16 +110,16 @@ public class PickupEntry
     public required int PickupIndex;
 
     [JsonInclude]
-    [JsonPropertyName("game_object_name")]
-    public required string GameObjectName;
-
-    [JsonInclude]
     [JsonPropertyName("item_key")]
     public required string ItemKey;
 
     [JsonInclude]
     [JsonPropertyName("item_val")]
     public int ItemValue = 1;
+
+    [JsonInclude]
+    [JsonPropertyName("additional_items")]
+    public Dictionary<string, string> AdditionalItems = [];
 
     [JsonInclude]
     [JsonPropertyName("item_display_name")]

@@ -67,7 +67,7 @@ class Wrapper:
         patch_data: dict,
         progress_update: Callable[[str, float], None],
     ):
-        with tempfile.TemporaryDirectory(delete=False) as tempdir:# Copy to input dir to temp dir first to do operations there
+        with tempfile.TemporaryDirectory() as tempdir:# Copy to input dir to temp dir first to do operations there
             progress_update("Copying to temporary path...", 0)
             shutil.copytree(input_path, tempdir, dirs_exist_ok=True)
 

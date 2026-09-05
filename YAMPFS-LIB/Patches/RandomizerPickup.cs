@@ -156,13 +156,15 @@ public class RandomizerPickup
                     """);
             }
 
-            if (pe.ItemKey.EndsWith(" Max"))
+            if (pe.AdditionalItems.Count > 0)
             {
                 var codeCollisionSamus = randoPickupGO.EventHandlerFor(EventType.Collision, OBJ_SAMUS_INSTANCE_ID, gmData);
-                codeCollisionSamus.SubstituteGMLCode($"""
-                    event_inherited();
-                    ds_write("{pe.ItemKey[..^4]}", ds_zero("{pe.ItemKey}"));
-                    """);
+                var collisionScript = "event_inherited();\n";
+                foreach (var kv in pe.AdditionalItems)
+                {
+                    collisionScript += $"ds_write(\"{kv.Key}\", {kv.Value});\n";
+                }
+                codeCollisionSamus.SubstituteGMLCode(collisionScript);
             }
         }
     }

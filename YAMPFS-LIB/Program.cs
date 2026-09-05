@@ -11,6 +11,8 @@ namespace YAMPFS_LIB;
 public class Patcher
 {
     public static string Version = CreateVersionString();
+
+    public static readonly string EXPECTED_VERSION = "1.0.4";
     internal static UndertaleData? gmData;
     internal static GlobalDecompileContext? decompileContext;
 
@@ -43,6 +45,8 @@ public class Patcher
 
         PatcherConfig? config = JsonSerializer.Deserialize<PatcherConfig>(File.ReadAllText(jsonPath)) 
             ?? throw new ApplicationException($"Json object at path {jsonPath} could not be parsed!");
+        config.Identifier.PatcherVersion = CreateVersionString();
+
         var sw = new Stopwatch();
         sw.Start();
 
@@ -58,6 +62,14 @@ public class Patcher
 
         decompileContext = new GlobalDecompileContext(gmData);
 
+        // version check
+        var menuPreCreate = gmData.Code.ByName("gml_Object_menu_title_PreCreate_0").GetGMLCode();
+        if (!menuPreCreate.Contains(EXPECTED_VERSION))
+        {
+            throw new ApplicationException($"Version is not {EXPECTED_VERSION}!");
+        }
+
+        Patches.TitleScreenModifications.Apply(gmData, config);
         Patches.StartingItems.Apply(gmData, config);
         Patches.StartLocation.Apply(gmData, config);
         Patches.RandomizerPickup.Apply(gmData, config);
