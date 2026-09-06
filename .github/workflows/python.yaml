@@ -17,7 +17,7 @@ jobs:
       matrix:
         os:
           - { name: "Linux", image: ubuntu-latest, event_name: "${{ github.event_name }}" }
-          - { name: "macOS-Silicon", image: macos-latest, event_name: "${{ github.event_name }}" }
+          - { name: "macOS-Silicon", image: macos-15, event_name: "${{ github.event_name }}" }
           - { name: "macOS-Intel", image: macos-15-intel, event_name: "${{ github.event_name }}"}
           - { name: "Windows", image: windows-latest, event_name: "${{ github.event_name }}" }
 
