@@ -280,6 +280,9 @@ public class AllItemLocations
                         "InstanceID": 102277
                     }
                     ],
+                    "SpawningScriptNames": [
+                        "gml_Object_obj_flaagrah_death_Destroy_0"
+                    ],
                     "OriginalObjectName": "obj_upgrade_varia_suit"
                 },
                 {
@@ -362,6 +365,9 @@ public class AllItemLocations
                         "Room": "cho_Watery_Hall",
                         "InstanceID": 102886
                     }
+                    ],
+                    "SpawningScriptNames": [
+                        "gml_Object_obj_enemy_eyon_Other_10"
                     ],
                     "OriginalObjectName": "obj_upgrade_charge_beam"
                 },
