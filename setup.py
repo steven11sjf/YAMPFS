@@ -48,7 +48,7 @@ def get_dotnet_rids():
     return rids
 
 def is_lipo_mergeable(path: Path):
-    result = subprocess.run(["lipo", "-info", str(path)], capture_output=True, text=True, check=True)
+    result = subprocess.run(["lipo", "-info", str(path)], capture_output=True, text=True)
     return result.returncode == 0
 
 def publish_single(rid: str, out_dir: Path):
