@@ -62,7 +62,11 @@ jobs:
             mkdir -p {dest_dir} &&
             mv $(dirname {wheel})/*.whl {dest_dir}/ 
           CIBW_BUILD: cp312-* cp313-* cp314-*
-          CIBW_ARCHS_MACOS: "x86_64 universal2"
+          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
+            pip install wheel &&
+            delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel} &&
+            python -m wheel tags --platform-tag macosx_15_0_universal2 --remove {dest_dir}/*.whl
         # Ideally, we'd have PYTHONWARNINGS=error here, but
         # https://github.com/pypa/pip/issues/12243 is causing issues.
         run: python -m cibuildwheel --output-dir wheelhouse
