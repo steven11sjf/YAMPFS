@@ -147,6 +147,6 @@ public class PickupEntry
 
     public bool IsExpansion()
     {
-        return (ItemKey == "Missiles Max" || ItemKey == "Power Bombs Max");
+        return (ItemKey == "Missiles Max" || ItemKey == "Power Bombs Max" || ItemKey == "Energy Tanks Max");
     }
 }
