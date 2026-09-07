@@ -8,7 +8,7 @@ string jsonPath = "";
 if (args.Length < 3)
 {
     Console.WriteLine("Insufficient arguments!");
-    Console.WriteLine("Usage: ./YAMPR [path-to-original-data-file] [path-to-output-data-file] [path-to-json-file]");
+    Console.WriteLine("Usage: ./YAMPFS [path-to-original-data-file] [path-to-output-data-file] [path-to-json-file]");
     return -1;
 }
 
