@@ -1,15 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-<<<<<<< Updated upstream
-	  <Version>0.2.5</Version>
-=======
-<<<<<<< Updated upstream
-	  <Version>0.2.4</Version>
-=======
 	  <Version>0.2.6</Version>
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     <OutputType>Library</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
