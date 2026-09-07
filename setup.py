@@ -18,8 +18,9 @@ ARCH_MAP = {
 }
 
 def get_target_archs():
-    if archs := re.findall(r"-arch\s+(\S+)", os.environ.get("ARCHFLAGS")):
-        return archs
+    if archflags := os.environ.get("ARCHFLAGS"):  # noqa: SIM102
+        if archs := re.findall(r"-arch\s+(\S+)", archflags):
+            return archs
 
     return [platform.machine()]
 
