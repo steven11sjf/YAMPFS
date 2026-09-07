@@ -4,15 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mpo_yampfs"
-<<<<<<< Updated upstream
-version = "0.2.5"
-=======
-<<<<<<< Updated upstream
-version = "0.2.4"
-=======
 version = "0.2.6"
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 authors = [
     {name = "hyperbola0"},
 ]
