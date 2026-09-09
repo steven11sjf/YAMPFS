@@ -53,25 +53,39 @@ public class RandomizerPickup
         ConvertPickupsToGameObjects(gmData);
 
         // patch out text and fanfare change for first missile expansion
-        // TODO: make game respect Missile Launcher item
         if (config.PickupConfig.RequireMainMissiles)
         {
-            var step0 = gmData.Code.ByName("gml_Object_obj_expansion_missile_Step_0");
-            step0.SubstituteGMLCode("");
+            var expansionMissileStep0 = gmData.Code.ByName("gml_Object_obj_expansion_missile_Step_0");
+            expansionMissileStep0.SubstituteGMLCode("");
 
-            var colSamus = gmData.Code.ByName("gml_Object_obj_expansion_missile_Collision_obj_samus");
-            colSamus.ReplaceGMLCode("ds_write(\"Missile Launcher\", 1);\n", "");
+            var expansionMissileColSamus = gmData.Code.ByName("gml_Object_obj_expansion_missile_Collision_obj_samus");
+            expansionMissileColSamus.ReplaceGMLCode("ds_write(\"Missile Launcher\", 1);\n", "");
+
+            var hudDraw64 = gmData.Code.ByName("gml_Object_obj_HUD_Draw_64");
+            hudDraw64.ReplaceGMLCode("if (ds_zero(\"Missiles Max\") > 0)", "if (dz(\"Missile Launcher\"))");
+
+            var samusOther14 = gmData.Code.ByName("gml_Object_obj_samus_Other_14");
+            samusOther14.ReplaceGMLCode(
+                "if (arg0 == 1 && ds_zero(\"Missiles\") > 0)", 
+                "if (arg0 == 1 && ds_zero(\"Missiles\") > 0 && dz(\"Missile Launcher\"))");
         }
 
         // patch out text and fanfare change for first power bomb
-        // TODO: make game respect Power Bomb Detonator item
         if (config.PickupConfig.RequirePBDetonator)
         {
-            var step0 = gmData.Code.ByName("gml_Object_obj_expansion_power_bomb_Step_0");
-            step0.SubstituteGMLCode("");
+            var expansionPBStep0 = gmData.Code.ByName("gml_Object_obj_expansion_power_bomb_Step_0");
+            expansionPBStep0.SubstituteGMLCode("");
 
-            var colSamus = gmData.Code.ByName("gml_Object_obj_expansion_power_bomb_Collision_obj_samus");
-            colSamus.ReplaceGMLCode("ds_write(\"Power Bomb Detonator\", 1);\n", "");
+            var expansionMissileColSamus = gmData.Code.ByName("gml_Object_obj_expansion_power_bomb_Collision_obj_samus");
+            expansionMissileColSamus.ReplaceGMLCode("ds_write(\"Power Bomb Detonator\", 1);\n", "");
+
+            var hudDraw64 = gmData.Code.ByName("gml_Object_obj_HUD_Draw_64");
+            hudDraw64.ReplaceGMLCode("if (ds_zero(\"Power Bombs Max\") > 0)", "if (dz(\"Power Bomb Detonator\"))");
+
+            var samusOther14 = gmData.Code.ByName("gml_Object_obj_samus_Other_14");
+            samusOther14.ReplaceGMLCode(
+                "if (ds_zero(\"Power Bombs\") > 0 && global.key_missile &&",
+                "if (ds_zero(\"Power Bombs\") > 0 && dz(\"Power Bomb Detonator\") && global.key_missile &&");
         }
 
         // patch draw function to check if it is an artifact
