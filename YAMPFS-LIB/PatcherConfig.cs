@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace YAMPFS_LIB;
 
@@ -20,6 +21,26 @@ public class PatcherConfig
     [JsonInclude]
     [JsonPropertyName("pickups")]
     public PickupConfig PickupConfig = new();
+
+    [JsonInclude]
+    [JsonPropertyName("accepted_modes")]
+    public MPOMode AcceptedModes = MPOMode.REMIX;
+
+    [JsonIgnore]
+    public static JsonSerializerOptions Options = new JsonSerializerOptions()
+        {
+            Converters =
+            {
+                new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower),
+            },
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+        };
+    
+    public static PatcherConfig ReadConfig(string path)
+    {
+        return JsonSerializer.Deserialize<PatcherConfig>(File.ReadAllText(path), Options)
+            ?? throw new ArgumentException($"Json object at path {path} could not be parsed!");
+    }
 }
 
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
@@ -149,4 +170,11 @@ public class PickupEntry
     {
         return (ItemKey == "Missiles Max" || ItemKey == "Power Bombs Max" || ItemKey == "Energy Tanks Max");
     }
+}
+
+public enum MPOMode
+{
+    REMIX,
+    CLASSIC,
+    ANY
 }

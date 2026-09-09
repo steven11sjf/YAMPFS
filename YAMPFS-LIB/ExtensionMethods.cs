@@ -48,4 +48,14 @@ public static class ExtensionMethods
     {
         Patcher.CodeCache[code] = modified.ReplaceLineEndings("\n");
     }
+
+    public static void AppendGMLCode(this UndertaleCode code, string toAppend)
+    {
+        Patcher.CodeCache[code] += toAppend.ReplaceLineEndings("\n");
+    }
+    
+    public static void AppendGMLCode(this UndertaleCode code, string start, string toAppend, bool optional = false)
+    {
+        code.ReplaceGMLCode(start, start + toAppend, optional);
+    }
 }
