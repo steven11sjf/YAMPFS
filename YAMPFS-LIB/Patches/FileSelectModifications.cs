@@ -19,12 +19,12 @@ public class FileSelectModifications
             codeFileSelectCreate0.AppendGMLCode(
                 $"    classic{i} = ds_zero_map(map{i}, \"Classic Mode\");\n",
                 $$"""
-                    var asdf = ds_zero_map(map{{i}}, "RDV Short Hash");
-                    if (asdf == 0)
+                    var tmp = ds_zero_map(map{{i}}, "RDV Short Hash");
+                    if (tmp == 0)
                     {
                         rdvhashes[{{i}}] = "UNKNOWN";
                     } else {
-                        rdvhashes[{{i}}] = asdf;
+                        rdvhashes[{{i}}] = tmp;
                     }
 
                 """);
