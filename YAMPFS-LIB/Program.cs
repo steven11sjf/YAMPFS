@@ -43,8 +43,7 @@ public class Patcher
     {
         Console.WriteLine($"Starting YAMPFS {CreateVersionString()}");
 
-        PatcherConfig? config = JsonSerializer.Deserialize<PatcherConfig>(File.ReadAllText(jsonPath)) 
-            ?? throw new ApplicationException($"Json object at path {jsonPath} could not be parsed!");
+        var config = PatcherConfig.ReadConfig(jsonPath);
         config.Identifier.PatcherVersion = CreateVersionString();
 
         var sw = new Stopwatch();
@@ -70,6 +69,7 @@ public class Patcher
         }
 
         Patches.TitleScreenModifications.Apply(gmData, config);
+        Patches.FileSelectModifications.Apply(gmData, config);
         Patches.StartingItems.Apply(gmData, config);
         Patches.StartLocation.Apply(gmData, config);
         Patches.RandomizerPickup.Apply(gmData, config);
