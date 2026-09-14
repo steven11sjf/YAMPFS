@@ -58,4 +58,15 @@ public static class ExtensionMethods
     {
         code.ReplaceGMLCode(start, start + toAppend, optional);
     }
+
+    
+    public static string SelectBetween(this UndertaleCode code, string start, string end)
+    {
+        var raw = code.GetGMLCode();
+
+        var startIdx = raw.IndexOf(start);
+        var endIdx = raw.IndexOf(end) + end.Length;
+
+        return raw[startIdx..endIdx];
+    }
 }

@@ -109,6 +109,12 @@ public class RandomizerPickup
 
             """);
 
+        // patch par_upgrade.Create to only check position meeting (fixes a bug where artifacts are incorrectly marked invisible)
+        var create0 = gmData.Code.ByName("gml_Object_par_upgrade_Create_0");
+        create0.ReplaceGMLCode(
+            "place_meeting(x, y, par_solid)",
+            "position_meeting(x, y, par_solid)");
+
         var par_upgrade = gmData.GameObjects.ByName("par_upgrade");
 
         // patch each item
