@@ -1,4 +1,5 @@
-﻿using Underanalyzer.Decompiler;
+﻿using System.Diagnostics;
+using Underanalyzer.Decompiler;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
 using UndertaleModLib.Models;
@@ -66,7 +67,6 @@ public static class ExtensionMethods
 
         var startIdx = raw.IndexOf(start);
         var endIdx = raw.IndexOf(end) + end.Length;
-
         return raw[startIdx..endIdx];
     }
 }
