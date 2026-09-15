@@ -4,20 +4,6 @@ namespace YAMPFS_LIB.Patches;
 
 public class StartingItems
 {
-    private static readonly string InitialCreationCode = 
-        """
-            ds_write("Energy", 99);
-            ds_write("Energy Tanks", ds_zero("Energy Tanks Max"));
-            ds_write("Varia Suit");
-            ds_write("Morph Ball");
-            ds_write("Morph Ball Bomb");
-            ds_write("Charge Beam");
-            ds_write("Grapple Beam");
-            ds_write("Missiles", 15);
-            ds_write("Missiles Max", 15);
-            ds_write("Missile Launcher", 1);
-        """;
-
     public static void Apply(UndertaleData gmData, PatcherConfig config)
     {
         // add starting etanks/missiles and aeon abilities to the start game function
