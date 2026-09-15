@@ -14,11 +14,10 @@ license = "GPL-3.0-or-later"
 requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Development Status :: 3 - Alpha",
     "Programming Language :: Python :: 3.12"
-
 ]
+
 dependencies = [
     "pythonnet",
 ]
