@@ -23,7 +23,7 @@ public class StartingItems
         // add starting etanks/missiles and aeon abilities to the start game function
 
         var gameCreateCode = gmData.Code.ByName("gml_Object_obj_game_Create_0");
-        var newCode = "";
+        var newCode = "    ds_write(\"Rando Artifact Count\", 0);\n";
         var items = config.StartingItems;
         // TODO: add variable etank sizes
         newCode += $"    ds_write(\"Energy\", {items.EnergyTanks * 100 + 99});\n";
@@ -42,7 +42,12 @@ public class StartingItems
             newCode += $"    array_push(aeon_array, \"{aeonName}\");\n";
         }
 
-        gameCreateCode.ReplaceGMLCode(InitialCreationCode, newCode);
+        gameCreateCode.ReplaceGMLCode(
+            gameCreateCode.SelectBetween(
+                "    ds_write(\"Energy\", 99);",
+                "    ds_write(\"Missile Launcher\", 1);"
+                ),
+            newCode);
 
         // remove the requirement to have artifacts to use the aeon menu
         var menuStepCode = gmData.Code.ByName("gml_Object_menu_save_point_Step_0");

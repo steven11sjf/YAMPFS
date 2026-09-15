@@ -1,4 +1,5 @@
-﻿using Underanalyzer.Decompiler;
+﻿using System.Diagnostics;
+using Underanalyzer.Decompiler;
 using UndertaleModLib;
 using UndertaleModLib.Decompiler;
 using UndertaleModLib.Models;
@@ -57,5 +58,15 @@ public static class ExtensionMethods
     public static void AppendGMLCode(this UndertaleCode code, string start, string toAppend, bool optional = false)
     {
         code.ReplaceGMLCode(start, start + toAppend, optional);
+    }
+
+    
+    public static string SelectBetween(this UndertaleCode code, string start, string end)
+    {
+        var raw = code.GetGMLCode();
+
+        var startIdx = raw.IndexOf(start);
+        var endIdx = raw.IndexOf(end) + end.Length;
+        return raw[startIdx..endIdx];
     }
 }

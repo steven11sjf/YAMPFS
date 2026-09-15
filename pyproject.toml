@@ -4,19 +4,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mpo_yampfs"
-version = "0.2.6"
+version = "0.2.7"
 authors = [
     {name = "hyperbola0"},
 ]
 description = "An open source randomizer patcher for Metroid Prime Origins."
 readme = "README.md"
-license = {file = "LICENSE.txt"}
-requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
+requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Development Status :: 3 - Alpha",
-    "Programming Language :: Python :: 3.11"
+    "Programming Language :: Python :: 3.12"
 
 ]
 dependencies = [

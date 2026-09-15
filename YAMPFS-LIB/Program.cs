@@ -73,6 +73,7 @@ public class Patcher
         Patches.StartingItems.Apply(gmData, config);
         Patches.StartLocation.Apply(gmData, config);
         Patches.RandomizerPickup.Apply(gmData, config);
+        Patches.Goals.Apply(gmData, config);
 
         // compile all code units
         CompileGroup group = new(gmData);

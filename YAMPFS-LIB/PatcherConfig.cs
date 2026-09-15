@@ -11,6 +11,9 @@ public class PatcherConfig
     public ConfigurationIdentifier Identifier = new();
 
     [JsonInclude]
+    public GoalConfig Goals = new();
+
+    [JsonInclude]
     [JsonPropertyName("starting_items")]
     public StartingItems StartingItems = new();
 
@@ -61,6 +64,18 @@ public class ConfigurationIdentifier
     [JsonInclude]
     [JsonPropertyName("patcher_version")]
     public string PatcherVersion = "";
+}
+
+public class GoalConfig
+{
+    [JsonInclude]
+    public int RequiredArtifacts = 12;
+
+    [JsonInclude]
+    public List<string> RequiredBosses = [];
+
+    [JsonInclude]
+    public string GoalDescription = "Collect 12 Chozo Artifacts";
 }
 
 [JsonUnmappedMemberHandling(JsonUnmappedMemberHandling.Disallow)]
